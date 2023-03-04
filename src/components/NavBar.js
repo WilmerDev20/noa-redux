@@ -10,6 +10,8 @@ import {  ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { HiOutlineBars3BottomLeft } from 'react-icons/hi2';
 import { MdClose } from 'react-icons/md';
 import { AiFillSetting } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { setDark } from '../store/darkTheme/darkSlice';
 
 function NavBar({activeLink}) {
 
@@ -24,6 +26,12 @@ function NavBar({activeLink}) {
     const switchToggle = document.querySelector('#switch-toggle');
     const app = document.querySelector('.App');
     const [darkMode, setDarkMode] = useState(null);
+
+    const dark=useSelector(state=>state.dark);
+    
+    console.log(dark);
+
+    const dispatch=useDispatch();
 
     const darkIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -42,8 +50,11 @@ function NavBar({activeLink}) {
     }
 
     function toggleTheme() {
-        setDarkMode(!darkMode);
-        localStorage.setItem('isDarkmode', JSON.stringify(!darkMode));
+
+        dispatch(setDark());
+
+        // setDarkMode(!darkMode);
+        localStorage.setItem('isDarkmode', JSON.stringify(!dark));
     }
       
     function setFixed() {
@@ -57,7 +68,8 @@ function NavBar({activeLink}) {
     useEffect(() => {
         const updateStatus = () => {
             let isDarkModeEnabled = JSON.parse(localStorage.getItem('isDarkmode'));
-            setDarkMode(isDarkModeEnabled);
+            dispatch(setDark());
+            // setDarkMode(isDarkModeEnabled);
             
             if (isDarkModeEnabled) {
                 switchToggle.classList.remove('bg-yellow-500','-translate-x-2');
@@ -82,7 +94,7 @@ function NavBar({activeLink}) {
 
         updateStatus();
 
-    },[app.classList, darkIcon, lightIcon, switchToggle, darkMode]);
+    },[app.classList, darkIcon, lightIcon, switchToggle]);
 
     window.addEventListener("scroll", setFixed)
     return (
@@ -170,7 +182,11 @@ function NavBar({activeLink}) {
                         <li className={`w-full font-semibold flex justify-center items-center h-14 text-center dark:text-background text-gray-500 ${isUser? "border-b border-slate-300 dark:border-gray-700" : ""}`}>
                             <button 
                                 className="w-16 h-5 rounded-full bg-white dark:bg-background flex items-center transition duration-300 focus:outline-none shadow"
-                                onClick={toggleTheme}>
+                                onClick={toggleTheme}
+                                
+
+                                >
+                                
                                 <div
                                     id="switch-toggle"
                                     className="w-9 h-9 relative rounded-full transition duration-500 transform bg-yellow-500 -translate-x-2 p-1 text-white">
